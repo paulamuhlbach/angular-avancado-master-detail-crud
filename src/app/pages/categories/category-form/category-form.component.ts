@@ -44,6 +44,18 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     this.setPageTitle();
   }
 
+  submitForm(){
+    this.submittingForm = true; // desbloqueia o botão para submissão do formulário
+
+    if(this.currentAction == "new"){
+      this.createCategory();
+    }
+    else{
+      // currentAction == "edit"
+      this.updateCategory();
+    }
+  }
+
   // métodos privados
 
   private setCurrentAction(){
@@ -85,5 +97,52 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
       const categoryName = this.category.name || "" // porque "ou nulo?" -> o ngAfterContentChecked quando carregado pela primeira vez traz uma categoria vazia
       this.pageTitle = "Editando Categoria: "+ categoryName;
     }
+  }
+
+  private createCategory(){
+    //cria um objeto novo e pega os valores informados no formulário
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    this.categoryService.create(category)
+      .subscribe(
+        category => this.actionsForSuccess(category),
+        error => this.actionsForError(error)
+      )
+
+  }
+
+  private updateCategory(){
+     //cria um objeto novo e pega os valores informados no formulário
+     const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+     this.categoryService.update(category)
+       .subscribe(
+         category => this.actionsForSuccess(category),
+         error => this.actionsForError(error)
+       )
+  }
+
+  private actionsForSuccess(category: Category){
+    toastr.success("Solicitação processada com sucesso");
+    
+    //forçar recarregamento do formulário para alterar rota de new para edit
+    // redirect/reload component page
+    this.router.navigateByUrl("categories", {skipLocationChange:true}).then(   // skipLocationChange: true não salva no histórico do navegador, evitando erros caso o usuário retorne depois de criar nova categoria
+      () => this.router.navigate(["categories", category.id, "edit"])
+    ) 
+
+  }
+
+  private actionsForError(error){
+    toastr.erro("Ocorreu um erro ao processar a sua solicitação!")
+
+    //para não submeter o formulário
+    this.submittingForm = false;
+
+    if(error.status === 442)
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+    else
+      this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente mais tarde."]
+
   }
 }
