@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Observable, throwError} from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
-import { Category } from './categories.model';
-import { element } from 'protractor';
+import { Category } from './category.model';
+
 
 @Injectable({
   providedIn: 'root'

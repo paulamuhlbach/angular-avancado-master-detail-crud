@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
 import { CategoriesModule } from './pages/categories';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDatabase } from './in-memory-database';
@@ -13,9 +15,10 @@ import { InMemoryDatabase } from './in-memory-database';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     CategoriesModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDatabase)
+   HttpClientInMemoryWebApiModule.forRoot(InMemoryDatabase)
     
   ],
   providers: [],
