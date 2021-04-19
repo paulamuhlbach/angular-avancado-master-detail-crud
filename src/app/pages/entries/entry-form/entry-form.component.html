@@ -101,8 +101,8 @@
             <div class="form-group col-md-3">
                 <label for="categoryId">Categoria</label>
                 <select name="categoryId" id="categoryId" formControlName="categoryId" class="form-control">
-                        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-                    </select>
+                    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+                  </select>
                 
                     <div class="text-danger" *ngIf="entryForm.get('categoryId').invalid && entryForm.get('categoryId').touched">
                         <div *ngIf="entryForm.get('categoryId').errors.required">Dado obrigatório</div>
