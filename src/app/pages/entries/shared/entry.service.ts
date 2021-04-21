@@ -15,7 +15,7 @@ import { Entry } from './entry.model';
 export class EntryService extends BaseResourceService<Entry>{
 
   constructor(protected injector: Injector, private categoyService: CategoryService) {
-    super("api/entries",injector);
+    super("api/entries", injector, Entry.fromJson);
   }
 
  
@@ -52,29 +52,4 @@ export class EntryService extends BaseResourceService<Entry>{
   }
 
  
-
-  //métodos protected
-
-  protected jsonDataToResources(jsonData: any[]): Entry[]{
-
-    //console.log(jsonData[0] as Entry); // assim retorna um objeto genérico
-    //console.log( Object.assign(new Entry(), jsonData[0]) ); // assim retorna o objeto Entry mesmo
-
-    const entries: Entry[] = [];
-    /*jsonData.forEach(element => entries.push(element as Entry));*/  // assim retorna um objeto genérico
-    jsonData.forEach(element => {
-      const entry = Object.assign(new Entry(), element);
-      entries.push(entry);
-    })
-   
-    return entries; 
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry{
-    return Object.assign(new Entry(), jsonData);
-    //return jsonData as Entry;
-  }
-
-  
-
 }
