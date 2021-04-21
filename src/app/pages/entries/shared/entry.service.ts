@@ -1,49 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
 
-import { Observable, throwError} from 'rxjs';
-import { map, catchError } from "rxjs/operators";
-import { flatMap } from 'rxjs/operators'
+import { Observable} from 'rxjs';
+import { flatMap } from "rxjs/operators";
 
+import { BaseResourceService } from '../../../shared/services/base-resource.service';
+import { CategoryService } from '../../categories/shared/category.service';
 import { Entry } from './entry.model';
 //import { Category } from '../../categories/shared/category.model';
-import { CategoryService } from '../../categories/shared/category.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class EntryService {
+export class EntryService extends BaseResourceService<Entry>{
 
-  private apiPath: string = "api/entries";
-  
-  constructor(private http: HttpClient, private categoyService: CategoryService) {}
-
-  getAll(): Observable<Entry[]> {
-    return this.http.get(this.apiPath).pipe(
-      catchError(this.handleError),
-      map(this.jsonDataToEntries)
-    )
+  constructor(protected injector: Injector, private categoyService: CategoryService) {
+    super("api/entries",injector);
   }
 
-  getById(id: number): Observable<Entry> {
-    const url = `${this.apiPath}/${id}`;
-
-    return this.http.get(url).pipe(
-      catchError(this.handleError),
-      map(this.jsonDataToEntry)    
-    )
-  }
-
+ 
   create(entry: Entry): Observable<Entry> {
    //adaptação para poder usar o in-memory-database. Com APIs remotas, não usar!
     return this.categoyService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.cateogory = category;
-
-        return this.http.post(this.apiPath, entry).pipe(
-          catchError(this.handleError),
-          map(this.jsonDataToEntry)
-         )
+        return super.create(entry)
       })
     );
     //uso normal
@@ -54,15 +35,11 @@ export class EntryService {
 
   update(entry: Entry): Observable<Entry> {
    //adaptação para poder usar o in-memory-database. Com APIs remotas, não usar!
-    const url = `${this.apiPath}/${entry.id}`; 
+ 
     return this.categoyService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.cateogory = category;
-
-        return this.http.put(url, entry).pipe(
-          catchError(this.handleError),
-          map(() => entry)
-         )
+        return super.update(entry)
       })
     );
  //uso normal
@@ -74,17 +51,11 @@ export class EntryService {
     )*/
   }
 
-  delete(id:number): Observable<any> {
-    const url = `${this.apiPath}/${id}`;
-    return this.http.delete(url).pipe(
-      catchError(this.handleError),
-      map(() => null)
-    )
-  }
+ 
 
-  //métodos privados
+  //métodos protected
 
-  private jsonDataToEntries(jsonData: any[]): Entry[]{
+  protected jsonDataToResources(jsonData: any[]): Entry[]{
 
     //console.log(jsonData[0] as Entry); // assim retorna um objeto genérico
     //console.log( Object.assign(new Entry(), jsonData[0]) ); // assim retorna o objeto Entry mesmo
@@ -99,14 +70,11 @@ export class EntryService {
     return entries; 
   }
 
-  private jsonDataToEntry(jsonData: any): Entry{
+  protected jsonDataToResource(jsonData: any): Entry{
     return Object.assign(new Entry(), jsonData);
     //return jsonData as Entry;
   }
 
-  private handleError(error: any): Observable<any>{
-    console.log("ERRO NA REQUISIÇÃO => ", error);
-    return throwError(error);
-  }
+  
 
 }
