@@ -125,6 +125,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   private actionsForSuccess(category: Category){
     toastr.success("Solicitação processada com sucesso");
     
+   // console.log(this.route.snapshot.parent.url[0].path); // fotografia da rota pai da rota atual
     //forçar recarregamento do formulário para alterar rota de new para edit
     // redirect/reload component page
     this.router.navigateByUrl("categories", {skipLocationChange:true}).then(   // skipLocationChange: true não salva no histórico do navegador, evitando erros caso o usuário retorne depois de criar nova categoria
