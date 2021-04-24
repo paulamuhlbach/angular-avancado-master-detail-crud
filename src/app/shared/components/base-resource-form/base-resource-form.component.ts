@@ -38,7 +38,7 @@ export abstract class BaseResourseFormComponent<T extends BaseResourceModel> imp
   ngOnInit() {
     //métodos
     this.setCurrentAction();
-    //this.buildResourceForm();
+    this.buildResourceForm();
     this.loadResource();
   }
 
@@ -151,4 +151,6 @@ export abstract class BaseResourseFormComponent<T extends BaseResourceModel> imp
       this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente mais tarde."]
 
   }
+
+  protected abstract buildResourceForm(): void;
 }
