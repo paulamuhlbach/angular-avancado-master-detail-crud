@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 
 import { CategoriesModule } from './pages/categories';
 import { EntriesModule } from './pages/entries';
-
+import { ReportsModule } from './pages/reports/reports.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,8 @@ import { EntriesModule } from './pages/entries';
     CoreModule,
     AppRoutingModule,
     CategoriesModule,
-    EntriesModule
+    EntriesModule,
+    ReportsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
